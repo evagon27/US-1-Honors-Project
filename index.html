@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power and Unity in U.S. History: 1607–1865</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #1e3c72;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .themes {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-top: 1rem;
+        }
+
+        .theme {
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .theme.power {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+        }
+
+        .theme.unity {
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            color: white;
+        }
+
+        .timeline-container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .period {
+            margin-bottom: 4rem;
+        }
+
+        .period-title {
+            text-align: center;
+            font-size: 2rem;
+            color: white;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 1rem;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, #ff6b6b, #4ecdc4);
+            border-radius: 2px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 5px solid transparent;
+        }
+
+        .timeline-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .timeline-item.power {
+            border-left-color: #ff6b6b;
+        }
+
+        .timeline-item.unity {
+            border-left-color: #4ecdc4;
+        }
+
+        .timeline-item.both {
+            border-left: 5px linear-gradient(to bottom, #ff6b6b, #4ecdc4);
+            border-left-color: #ff6b6b;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 15px;
+            height: 15px;
+            background: white;
+            border: 4px solid #ff6b6b;
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.8);
+        }
+
+        .timeline-item.unity::before {
+            border-color: #4ecdc4;
+        }
+
+        .timeline-item.both::before {
+            border-color: #ff6b6b;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .year {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1e3c72;
+        }
+
+        .theme-tag {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .theme-tag.power {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .theme-tag.unity {
+            background: #4ecdc4;
+            color: white;
+        }
+
+        .theme-tag.both {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+        }
+
+        .event-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .event-summary {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .detailed-content {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid #eee;
+            display: none;
+        }
+
+        .detailed-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .detail-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-section h4 {
+            color: #1e3c72;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .detail-section p {
+            line-height: 1.7;
+            color: #555;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-style: italic;
+            margin: 1rem 0;
+            border: 2px dashed #ccc;
+        }
+
+        .expand-indicator {
+            font-size: 1.2rem;
+            color: #1e3c72;
+            transition: transform 0.3s ease;
+        }
+
+        .timeline-item.expanded .expand-indicator {
+            transform: rotate(180deg);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .themes {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .timeline {
+                padding-left: 1rem;
+            }
+
+            .timeline::before {
+                left: 0.5rem;
+            }
+
+            .timeline-item::before {
+                left: -1.25rem;
+                width: 12px;
+                height: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Power and Unity in U.S. History: 1607–1865</h1>
+        <div class="themes">
+            <div class="theme power">Power: Government Authority, Military Strength, Territorial Control</div>
+            <div class="theme unity">Unity: States or People Working Together for Common Cause</div>
+        </div>
+    </div>
+
+    <div class="timeline-container">
+        <!-- Colonial Period -->
+        <div class="period">
+            <h2 class="period-title">Colonial Period (1607–1775)</h2>
+            <div class="timeline">
+                <div class="timeline-item power" onclick="toggleDetails(this)">
+                    <div class="item-header">
+                        <span class="year">1607</span>
+                        <div class="theme-tag power">Power</div>
+                        <span class="expand-indicator">▼</span>
+                    </div>
+                    <div class="event-title">Jamestown Founded</div>
+                    <div class="event-summary">First permanent English settlement in North America</div>
+                    <div class="detailed-content">
+                        <div class="image-placeholder">[Historical depiction of Nat Turner's Rebellion]</div>
+                        <div class="detail-section">
+                            <h4>Event Details</h4>
+                            <p>Led by Nat Turner, an enslaved preacher in Southampton County, Virginia, this rebellion resulted in the deaths of approximately 60 white people before being suppressed. Turner and his followers believed they were carrying out divine will to end slavery through violent resistance.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Connection to Theme: Power</h4>
+                            <p>Nat Turner's Rebellion represents a direct challenge to the power structure of slavery and white supremacy in the antebellum South. The rebellion demonstrated that enslaved people possessed agency and would resist their oppression through organized violence when other means failed. The uprising terrified white Southerners by revealing the potential power of enslaved resistance and the vulnerability of the slave system. In response, Southern states enacted harsher slave codes and restrictions, showing how those in power sought to maintain control through increased repression. The rebellion highlighted the fundamental power struggle inherent in slavery and foreshadowed the larger conflict that would eventually lead to Civil War.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item power" onclick="toggleDetails(this)">
+                    <div class="item-header">
+                        <span class="year">1832</span>
+                        <div class="theme-tag power">Power Struggle</div>
+                        <span class="expand-indicator">▼</span>
+                    </div>
+                    <div class="event-title">Nullification Crisis</div>
+                    <div class="event-summary">States challenge federal law over tariffs</div>
+                    <div class="detailed-content">
+                        <div class="image-placeholder">[Political cartoon or image of Andrew Jackson during Nullification Crisis]</div>
+                        <div class="detail-section">
+                            <h4>Event Details</h4>
+                            <p>South Carolina declared federal tariffs unconstitutional and threatened to nullify them within state borders. President Andrew Jackson responded with the Force Bill, authorizing military action to enforce federal law, while Henry Clay crafted a compromise tariff to resolve the crisis.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Connection to Theme: Power Struggle</h4>
+                            <p>The Nullification Crisis represents a fundamental power struggle between federal authority and state sovereignty. South Carolina, led by John C. Calhoun's theory of nullification, asserted states' power to reject federal laws they deemed unconstitutional, directly challenging the supremacy of federal government. President Jackson's firm response demonstrated federal power and the principle that the Union was indissoluble. This crisis tested whether states could use their power to resist federal authority and established important precedents about the limits of state sovereignty. The peaceful resolution through compromise showed how power conflicts could be managed through negotiation, but the underlying tensions about federal versus state power would continue to escalate toward Civil War.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item power" onclick="toggleDetails(this)">
+                    <div class="item-header">
+                        <span class="year">1846–1848</span>
+                        <div class="theme-tag power">Power</div>
+                        <span class="expand-indicator">▼</span>
+                    </div>
+                    <div class="event-title">Mexican-American War</div>
+                    <div class="event-summary">U.S. gains vast new territory</div>
+                    <div class="detailed-content">
+                        <div class="image-placeholder">[Map showing Mexican Cession territory or battle scene]</div>
+                        <div class="detail-section">
+                            <h4>Event Details</h4>
+                            <p>This war began over the annexation of Texas and disputes about territorial boundaries. American forces defeated Mexico, resulting in the Treaty of Guadalupe Hidalgo, which ceded vast territories including present-day California, Nevada, Utah, Arizona, and parts of Colorado, Wyoming, and New Mexico to the United States.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Connection to Theme: Power</h4>
+                            <p>The Mexican-American War dramatically demonstrated American military and territorial power, fulfilling the concept of Manifest Destiny through conquest. The war showed America's ability to project military force across vast distances and defeat a neighboring nation, establishing the United States as the dominant power in North America. The territorial gains increased American economic and strategic power by providing access to Pacific ports, gold in California, and vast lands for expansion. However, this exercise of power also intensified sectional tensions over slavery's expansion into new territories, ultimately contributing to the power struggles that would lead to Civil War. The war established America as an emerging imperial power while simultaneously creating internal conflicts over how that power should be used.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item unity" onclick="toggleDetails(this)">
+                    <div class="item-header">
+                        <span class="year">1850</span>
+                        <div class="theme-tag unity">Unity</div>
+                        <span class="expand-indicator">▼</span>
+                    </div>
+                    <div class="event-title">Compromise of 1850</div>
+                    <div class="event-summary">North and South attempt to settle differences</div>
+                    <div class="detailed-content">
+                        <div class="image-placeholder">[Henry Clay presenting the Compromise or Senate debate scene]</div>
+                        <div class="detail-section">
+                            <h4>Event Details</h4>
+                            <p>This complex agreement, primarily crafted by Henry Clay and Stephen Douglas, admitted California as a free state, organized Utah and New Mexico territories without restrictions on slavery, ended the slave trade in Washington D.C., and included a stronger Fugitive Slave Act requiring Northern cooperation in returning escaped slaves.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Connection to Theme: Unity</h4>
+                            <p>The Compromise of 1850 represents a final major attempt to preserve national unity through sectional accommodation and mutual concession. Faced with threats of secession from both North and South over slavery's expansion, congressional leaders worked to find middle ground that both sections could accept. The compromise temporarily maintained unity by giving each section partial victories while avoiding immediate crisis. However, the Fugitive Slave Act portion actually increased tensions by forcing Northern participation in slavery enforcement, revealing the growing difficulty of maintaining unity while accommodating fundamentally incompatible systems. This compromise showed both the possibility and limits of preserving unity through political negotiation on moral issues.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item power" onclick="toggleDetails(this)">
+                    <div class="item-header">
+                        <span class="year">1854</span>
+                        <div class="theme-tag power">Breakdown of Unity</div>
+                        <span class="expand-indicator">▼</span>
+                    </div>
+                    <div class="event-title">Kansas-Nebraska Act</div>
+                    <div class="event-summary">Territories choose slavery status, violence erupts</div>
+                    <div class="detailed-content">
+                        <div class="image-placeholder">[Map showing Kansas-Nebraska territories or "Bleeding Kansas" violence]</div>
+                        <div class="detail-section">
+                            <h4>Event Details</h4>
+                            <p>Senator Stephen Douglas's legislation organized Kansas and Nebraska territories under "popular sovereignty," allowing residents to decide slavery's status through voting. This effectively repealed the Missouri Compromise line and led to violent conflicts in Kansas between pro-slavery and anti-slavery settlers.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Connection to Theme: Breakdown of Unity</h4>
+                            <p>The Kansas-Nebraska Act shattered the fragile unity that previous compromises had maintained, marking a turning point toward irreconcilable sectional conflict. By repealing the Missouri Compromise, the act destroyed a fundamental agreement that had preserved peace for over thirty years. The resulting violence in "Bleeding Kansas" demonstrated that political compromise could no longer contain the slavery question, as both sides resorted to force to achieve their goals. The act also led to the collapse of the Whig Party and formation of the Republican Party, further polarizing American politics along sectional lines. This legislation revealed that the power struggle over slavery had reached a point where unity could no longer be maintained through traditional political accommodation.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Civil War Period -->
+        <div class="period">
+            <h2 class="period-title">Civil War Period (1861–1865)</h2>
+            <div class="timeline">
+                <div class="timeline-item power" onclick="toggleDetails(this)">
+                    <div class="item-header">
+                        <span class="year">1860</span>
+                        <div class="theme-tag power">Power Shift</div>
+                        <span class="expand-indicator">▼</span>
+                    </div>
+                    <div class="event-title">Lincoln Elected President</div>
+                    <div class="event-summary">Southern states begin seceding from the Union</div>
+                    <div class="detailed-content">
+                        <div class="image-placeholder">[Portrait of Abraham Lincoln or election map of 1860]</div>
+                        <div class="detail-section">
+                            <h4>Event Details</h4>
+                            <p>Abraham Lincoln won the presidency with only 40% of the popular vote but a majority of electoral votes, without appearing on the ballot in most Southern states. His Republican Party platform opposed slavery's expansion, prompting South Carolina and other states to secede before his inauguration.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Connection to Theme: Power Shift</h4>
+                            <p>Lincoln's election represented a fundamental shift in national political power from Southern slaveholding interests to Northern free-labor ideology. For the first time, a president was elected despite receiving virtually no Southern support, demonstrating that the North's growing population and electoral power could control national government without Southern consent. This power shift threatened the South's ability to protect slavery through federal policy, leading to secession as Southern states chose to abandon the Union rather than accept subordinate political status. The election revealed that the constitutional system could no longer balance sectional power differences, making armed conflict almost inevitable as each section sought to preserve or transform American political power structures.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item power" onclick="toggleDetails(this)">
+                    <div class="item-header">
+                        <span class="year">1861</span>
+                        <div class="theme-tag power">Power</div>
+                        <span class="expand-indicator">▼</span>
+                    </div>
+                    <div class="event-title">Civil War Begins</div>
+                    <div class="event-summary">Conflict over secession and slavery begins</div>
+                    <div class="detailed-content">
+                        <div class="image-placeholder">[Fort Sumter under bombardment or Civil War battle scene]</div>
+                        <div class="detail-section">
+                            <h4>Event Details</h4>
+                            <p>The Civil War began when Confederate forces fired on Fort Sumter in Charleston Harbor. This attack on a federal installation marked the start of armed conflict between the United States government and the Confederate States of America, which claimed independence from the Union.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Connection to Theme: Power</h4>
+                            <p>The Civil War's beginning represents the ultimate breakdown of political power-sharing and the resort to military power to resolve irreconcilable differences. The Confederacy's attack on Fort Sumter challenged federal authority and the government's power to maintain control over its territory and installations. Lincoln's response demonstrated federal determination to preserve the Union through military force, asserting that no state had the power to unilaterally leave the United States. The war became a fundamental contest over whether the federal government possessed sufficient power to prevent dissolution of the nation and whether the Constitution created an indissoluble union. This conflict would ultimately determine the balance of power between federal and state authority in American governance.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item power" onclick="toggleDetails(this)">
+                    <div class="item-header">
+                        <span class="year">1863</span>
+                        <div class="theme-tag power">Power</div>
+                        <span class="expand-indicator">▼</span>
+                    </div>
+                    <div class="event-title">Emancipation Proclamation</div>
+                    <div class="event-summary">Frees slaves in Confederate states</div>
+                    <div class="detailed-content">
+                        <div class="image-placeholder">[Lincoln signing Emancipation Proclamation or freed slaves celebrating]</div>
+                        <div class="detail-section">
+                            <h4>Event Details</h4>
+                            <p>President Lincoln issued the Emancipation Proclamation, declaring freedom for slaves in rebellious states. This executive action transformed the war's purpose from merely preserving the Union to also ending slavery, while encouraging enslaved people to escape and join Union forces.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Connection to Theme: Power</h4>
+                            <p>The Emancipation Proclamation represents a revolutionary use of presidential power to transform American society and the nature of the Civil War. Lincoln expanded executive authority by using his war powers as Commander-in-Chief to free slaves in rebellious territories, fundamentally altering the conflict's moral and strategic dimensions. This proclamation shifted power from slaveholders to the enslaved, encouraging slave rebellion and flight to Union lines, which weakened Confederate military and economic power. The proclamation also transformed federal power by making the government an active agent of social revolution rather than merely preserving existing institutions. This exercise of power redefined American democracy and federal authority, establishing precedents for using government power to promote equality and human rights.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item unity" onclick="toggleDetails(this)">
+                    <div class="item-header">
+                        <span class="year">1863</span>
+                        <div class="theme-tag unity">Unity</div>
+                        <span class="expand-indicator">▼</span>
+                    </div>
+                    <div class="event-title">Gettysburg Address</div>
+                    <div class="event-summary">Lincoln redefines war as a fight for unity and freedom</div>
+                    <div class="detailed-content">
+                        <div class="image-placeholder">[Lincoln delivering Gettysburg Address or battlefield memorial]</div>
+                        <div class="detail-section">
+                            <h4>Event Details</h4>
+                            <p>At the dedication of a national cemetery at Gettysburg battlefield, President Lincoln delivered a brief but profound speech redefining the Civil War as a struggle for democratic ideals and national rebirth, honoring the fallen while calling for continued dedication to the cause of freedom and union.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Connection to Theme: Unity</h4>
+                            <p>The Gettysburg Address powerfully articulates the theme of unity by reframing the Civil War as a sacred mission to preserve and perfect American democracy for all people. Lincoln's call for a "new birth of freedom" envisions a reunited nation dedicated to the proposition that all people are created equal, transcending the divisions that caused the war. The speech emphasizes that the living must continue the "unfinished work" of creating true national unity based on liberty and equality rather than compromise with slavery. Lincoln transforms the battlefield from a site of division into hallowed ground that consecrates the Union cause, inspiring Americans to pursue unity through shared sacrifice for democratic ideals rather than mere political accommodation.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item both" onclick="toggleDetails(this)">
+                    <div class="item-header">
+                        <span class="year">1865</span>
+                        <div class="theme-tag both">Power & Unity</div>
+                        <span class="expand-indicator">▼</span>
+                    </div>
+                    <div class="event-title">Civil War Ends / 13th Amendment Passed</div>
+                    <div class="event-summary">Union wins, slavery abolished</div>
+                    <div class="detailed-content">
+                        <div class="image-placeholder">[Lee's surrender at Appomattox or celebration of war's end]</div>
+                        <div class="detail-section">
+                            <h4>Event Details</h4>
+                            <p>General Robert E. Lee surrendered to Ulysses S. Grant at Appomattox Court House, effectively ending the Civil War. The same year, Congress passed and states ratified the 13th Amendment, permanently abolishing slavery throughout the United States.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Connection to Themes: Power and Unity</h4>
+                            <p>The Civil War's end and the 13th Amendment represent the ultimate triumph of both federal power and national unity over sectional division and human bondage. The Union victory established that federal power was supreme over state claims of secession, permanently settling the question of whether the United States was a voluntary confederation or an indissoluble nation. The 13th Amendment demonstrated federal power to transform society by eliminating slavery everywhere, fulfilling the promise of the Declaration of Independence that all people are created equal. This created a new basis for national unity founded on freedom rather than compromise with slavery. However, the challenge of Reconstruction would test whether this military victory and constitutional change could create lasting unity and equality, showing that achieving true national unity required ongoing effort beyond military power alone.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleDetails(element) {
+            const detailsDiv = element.querySelector('.detailed-content');
+            const indicator = element.querySelector('.expand-indicator');
+            
+            if (detailsDiv.classList.contains('active')) {
+                detailsDiv.classList.remove('active');
+                element.classList.remove('expanded');
+            } else {
+                // Close all other expanded items
+                document.querySelectorAll('.timeline-item').forEach(item => {
+                    item.querySelector('.detailed-content').classList.remove('active');
+                    item.classList.remove('expanded');
+                });
+                
+                // Open this item
+                detailsDiv.classList.add('active');
+                element.classList.add('expanded');
+            }
+        }
+
+        // Add smooth scrolling for better UX
+        document.addEventListener('DOMContentLoaded', function() {
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            
+            timelineItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    setTimeout(() => {
+                        if (this.classList.contains('expanded')) {
+                            this.scrollIntoView({ 
+                                behavior: 'smooth', 
+                                block: 'center' 
+                            });
+                        }
+                    }, 100);
+                });
+            });
+        });
+    </script>
+</body>
+</html> class="image-placeholder">[Historical image of Jamestown settlement would go here]</div>
+                        <div class="detail-section">
+                            <h4>Event Details</h4>
+                            <p>The establishment of Jamestown marked England's first successful attempt to create a permanent foothold in the New World. This settlement represented the beginning of English colonial power projection across the Atlantic, establishing territorial control and economic influence in North America.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Connection to Theme: Power</h4>
+                            <p>Jamestown exemplifies the theme of power through its role as England's assertion of territorial control and authority in the Americas. The Virginia Company's charter granted them governmental authority over the colony, establishing European political and economic systems. The settlement's survival and growth demonstrated England's military and logistical capabilities to maintain overseas dominions, setting a precedent for future colonial expansion and the exercise of imperial power.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item unity" onclick="toggleDetails(this)">
+                    <div class="item-header">
+                        <span class="year">1620</span>
+                        <div class="theme-tag unity">Unity</div>
+                        <span class="expand-indicator">▼</span>
+                    </div>
+                    <div class="event-title">Mayflower Compact Signed</div>
+                    <div class="event-summary">Pilgrims agree to self-govern and work together</div>
+                    <div class="detailed-content">
+                        <div class="image-placeholder">[Historical image of Mayflower Compact signing would go here]</div>
+                        <div class="detail-section">
+                            <h4>Event Details</h4>
+                            <p>Before disembarking at Plymouth, the Pilgrims created and signed the Mayflower Compact, a social contract that established self-governance and collective decision-making for their new community. This document represented one of the earliest examples of democratic principles in American colonial history.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Connection to Theme: Unity</h4>
+                            <p>The Mayflower Compact embodies the theme of unity through its establishment of collective governance and mutual cooperation. The document bound the colonists together under agreed-upon laws and leadership, creating social cohesion necessary for survival in the harsh New World environment. This compact demonstrated how people could unite around shared principles and common goals, establishing a foundation for democratic participation and community solidarity that would influence American political development for centuries to come.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item power" onclick="toggleDetails(this)">
+                    <div class="item-header">
+                        <span class="year">1676</span>
+                        <div class="theme-tag power">Power</div>
+                        <span class="expand-indicator">▼</span>
+                    </div>
+                    <div class="event-title">Bacon's Rebellion</div>
+                    <div class="event-summary">Colonists rise up against colonial leadership</div>
+                    <div class="detailed-content">
+                        <div class="image-placeholder">[Historical image depicting Bacon's Rebellion would go here]</div>
+                        <div class="detail-section">
+                            <h4>Event Details</h4>
+                            <p>Led by Nathaniel Bacon, Virginia colonists rebelled against Governor William Berkeley's administration, protesting policies regarding Native American relations, taxation, and political representation. The rebellion resulted in the burning of Jamestown and widespread civil conflict before ultimately failing.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Connection to Theme: Power</h4>
+                            <p>Bacon's Rebellion illustrates the theme of power through its demonstration of colonial resistance to established authority and the struggle for political control. The rebellion revealed tensions between different power structures: the colonial government's authority versus popular demands for representation and protection. It highlighted how power could be challenged from below and showed the fragility of colonial governmental authority when it failed to address colonists' concerns, foreshadowing later revolutionary sentiments about legitimate governance and the right to resist unjust authority.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item both" onclick="toggleDetails(this)">
+                    <div class="item-header">
+                        <span class="year">1754–1763</span>
+                        <div class="theme-tag both">Unity & Power</div>
+                        <span class="expand-indicator">▼</span>
+                    </div>
+                    <div class="event-title">French and Indian War</div>
+                    <div class="event-summary">Colonial and British forces unite against France and Native allies</div>
+                    <div class="detailed-content">
+                        <div class="image-placeholder">[Map showing French and Indian War territories and battles]</div>
+                        <div class="detail-section">
+                            <h4>Event Details</h4>
+                            <p>This conflict, known in Europe as the Seven Years' War, saw British and American colonial forces fighting together against French forces and their Native American allies for control of North American territories. The war ended with British victory and France's loss of most North American holdings.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Connection to Themes: Unity and Power</h4>
+                            <p>The French and Indian War exemplifies both unity and power themes. Unity is demonstrated through the unprecedented cooperation between British regular forces and American colonial militias, working together despite cultural and tactical differences to achieve victory. The Albany Plan of Union, though unsuccessful, showed early attempts at colonial cooperation. The power theme is evident in the war's outcome, which established British dominance over North American territories and shifted the balance of imperial power. However, the war's massive costs led Britain to tax the colonies, ultimately creating the power struggles that would lead to the American Revolution.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item power" onclick="toggleDetails(this)">
+                    <div class="item-header">
+                        <span class="year">1765</span>
+                        <div class="theme-tag power">Power Struggle</div>
+                        <span class="expand-indicator">▼</span>
+                    </div>
+                    <div class="event-title">Stamp Act Passed</div>
+                    <div class="event-summary">Colonial protests begin over British taxes</div>
+                    <div class="detailed-content">
+                        <div class="image-placeholder">[Image of Stamp Act protests or tax stamps would go here]</div>
+                        <div class="detail-section">
+                            <h4>Event Details</h4>
+                            <p>The British Parliament passed the Stamp Act, requiring colonists to pay taxes on printed materials including newspapers, legal documents, and playing cards. This direct tax sparked widespread colonial protests, boycotts, and the formation of the Sons of Liberty organization.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Connection to Theme: Power Struggle</h4>
+                            <p>The Stamp Act represents a crucial power struggle between imperial authority and colonial rights. Britain asserted its power to tax the colonies without their consent, claiming parliamentary sovereignty over all British subjects. The colonists challenged this authority, arguing "no taxation without representation" and asserting their rights as Englishmen. This conflict established the fundamental question of who held legitimate power over the colonies and marked the beginning of organized resistance that would ultimately lead to revolution, demonstrating how disputes over the scope and limits of governmental power could escalate into broader constitutional crises.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Revolutionary Era -->
+        <div class="period">
+            <h2 class="period-title">Revolutionary Era (1776–1789)</h2>
+            <div class="timeline">
+                <div class="timeline-item unity" onclick="toggleDetails(this)">
+                    <div class="item-header">
+                        <span class="year">1776</span>
+                        <div class="theme-tag unity">Unity</div>
+                        <span class="expand-indicator">▼</span>
+                    </div>
+                    <div class="event-title">Declaration of Independence</div>
+                    <div class="event-summary">Thirteen colonies unite to break away from Britain</div>
+                    <div class="detailed-content">
+                        <div class="image-placeholder">[Famous image of Declaration signing or document itself]</div>
+                        <div class="detail-section">
+                            <h4>Event Details</h4>
+                            <p>The Continental Congress approved the Declaration of Independence, written primarily by Thomas Jefferson, formally announcing the thirteen colonies' separation from British rule and establishing the philosophical foundations for American democracy based on natural rights and popular sovereignty.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Connection to Theme: Unity</h4>
+                            <p>The Declaration of Independence represents the ultimate expression of colonial unity, transforming thirteen separate colonies into a unified nation with shared principles and common cause. Despite significant differences in economy, culture, and regional interests, the colonies came together to declare their collective independence and mutual support for each other's freedom. The document's famous phrase "we mutually pledge to each other our Lives, our Fortunes and our sacred Honor" exemplifies this unity of purpose. This unprecedented cooperation created the foundation for American national identity and demonstrated how diverse communities could unite around shared ideals of liberty and self-governance.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item power" onclick="toggleDetails(this)">
+                    <div class="item-header">
+                        <span class="year">1781</span>
+                        <div class="theme-tag power">Power</div>
+                        <span class="expand-indicator">▼</span>
+                    </div>
+                    <div class="event-title">Battle of Yorktown</div>
+                    <div class="event-summary">Final major victory in the Revolutionary War</div>
+                    <div class="detailed-content">
+                        <div class="image-placeholder">[Battle scene or surrender at Yorktown illustration]</div>
+                        <div class="detail-section">
+                            <h4>Event Details</h4>
+                            <p>The siege of Yorktown resulted in the surrender of British General Cornwallis and his army to combined American and French forces led by George Washington and Comte de Rochambeau. This decisive victory effectively ended major combat operations in the Revolutionary War.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Connection to Theme: Power</h4>
+                            <p>The Battle of Yorktown represents the decisive shift of military and political power from Britain to the emerging United States. The victory demonstrated America's ability to marshal sufficient military force, with crucial French support, to defeat the world's most powerful empire. This triumph established American military credibility and negotiating power in securing independence, while simultaneously weakening British imperial power in North America. The surrender ceremony itself symbolized the transfer of authority and legitimacy from colonial status to sovereign nationhood, marking America's emergence as an independent power capable of defending its interests on the world stage.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item both" onclick="toggleDetails(this)">
+                    <div class="item-header">
+                        <span class="year">1787</span>
+                        <div class="theme-tag both">Unity & Power</div>
+                        <span class="expand-indicator">▼</span>
+                    </div>
+                    <div class="event-title">Constitutional Convention</div>
+                    <div class="event-summary">States meet to form a stronger federal government</div>
+                    <div class="detailed-content">
+                        <div class="image-placeholder">[Image of Constitutional Convention delegates in Independence Hall]</div>
+                        <div class="detail-section">
+                            <h4>Event Details</h4>
+                            <p>Delegates from twelve states (Rhode Island absent) met in Philadelphia to address the weaknesses of the Articles of Confederation. Instead of merely revising the Articles, they created an entirely new Constitution establishing a stronger federal government with executive, legislative, and judicial branches.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Connection to Themes: Unity and Power</h4>
+                            <p>The Constitutional Convention embodies both unity and power through its creation of a framework for national governance. Unity is demonstrated by the states' willingness to compromise on fundamental issues like representation (Great Compromise), slavery (Three-Fifths Compromise), and federal versus state authority. Despite deep divisions, delegates found common ground in creating a "more perfect union." The power theme is evident in the Constitution's careful balance of federal authority against state rights, separation of powers among branches, and checks and balances to prevent tyranny. The document created a powerful national government while preserving unity through federalism and democratic representation, establishing enduring principles for managing power in a diverse republic.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item power" onclick="toggleDetails(this)">
+                    <div class="item-header">
+                        <span class="year">1789</span>
+                        <div class="theme-tag power">Power</div>
+                        <span class="expand-indicator">▼</span>
+                    </div>
+                    <div class="event-title">U.S. Constitution Ratified</div>
+                    <div class="event-summary">Creates the foundation of U.S. government</div>
+                    <div class="detailed-content">
+                        <div class="image-placeholder">[Image of Constitution document or ratification ceremony]</div>
+                        <div class="detail-section">
+                            <h4>Event Details</h4>
+                            <p>After intense debate between Federalists and Anti-Federalists, nine states ratified the Constitution, bringing it into effect. George Washington was inaugurated as the first President, establishing the new federal government's executive, legislative, and judicial branches.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Connection to Theme: Power</h4>
+                            <p>The Constitution's ratification represents the formal establishment of American governmental power and authority. This document created a federal system that balanced power between national and state governments while establishing three co-equal branches with checks and balances to prevent the concentration of power. The Constitution granted the federal government specific powers including taxation, military command, and interstate commerce regulation, while reserving other powers to states. This framework demonstrated how power could be structured democratically through written law rather than inherited monarchy, creating a revolutionary model of constitutional government that limited power through law while providing sufficient authority for effective governance.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Early Republic -->
+        <div class="period">
+            <h2 class="period-title">Early Republic (1790–1820)</h2>
+            <div class="timeline">
+                <div class="timeline-item both" onclick="toggleDetails(this)">
+                    <div class="item-header">
+                        <span class="year">1791</span>
+                        <div class="theme-tag both">Unity & Power</div>
+                        <span class="expand-indicator">▼</span>
+                    </div>
+                    <div class="event-title">Bill of Rights Added</div>
+                    <div class="event-summary">Protects individual and state rights</div>
+                    <div class="detailed-content">
+                        <div class="image-placeholder">[Image of Bill of Rights document]</div>
+                        <div class="detail-section">
+                            <h4>Event Details</h4>
+                            <p>The first ten amendments to the Constitution were ratified, guaranteeing essential individual liberties including freedom of speech, religion, and the press, while also protecting states' rights and limiting federal power. These amendments addressed Anti-Federalist concerns about governmental overreach.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Connection to Themes: Unity and Power</h4>
+                            <p>The Bill of Rights demonstrates unity by resolving the ratification crisis and bringing Anti-Federalists into the constitutional system through compromise and mutual accommodation. These amendments unified Americans around shared principles of individual liberty and limited government. Regarding power, the Bill of Rights established crucial limits on governmental authority, protecting individual freedoms and state prerogatives from federal encroachment. This created a balance between effective governance and protection of rights, showing how power could be constrained through constitutional law while maintaining national unity around common values of liberty and justice.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item power" onclick="toggleDetails(this)">
+                    <div class="item-header">
+                        <span class="year">1803</span>
+                        <div class="theme-tag power">Power</div>
+                        <span class="expand-indicator">▼</span>
+                    </div>
+                    <div class="event-title">Louisiana Purchase</div>
+                    <div class="event-summary">U.S. doubles in size through peaceful negotiation</div>
+                    <div class="detailed-content">
+                        <div class="image-placeholder">[Map showing Louisiana Purchase territory]</div>
+                        <div class="detail-section">
+                            <h4>Event Details</h4>
+                            <p>President Thomas Jefferson purchased approximately 828,000 square miles of territory from France for $15 million, doubling the size of the United States. This acquisition included land from the Mississippi River to the Rocky Mountains, extending from the Gulf of Mexico to the Canadian border.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Connection to Theme: Power</h4>
+                            <p>The Louisiana Purchase dramatically expanded American territorial power and influence across the continent. This acquisition demonstrated the young nation's growing economic power and diplomatic capability to negotiate major international agreements. The purchase eliminated French presence in North America, reduced potential threats to American security, and provided vast resources for westward expansion. However, it also raised constitutional questions about federal power, as Jefferson questioned whether the Constitution granted the federal government authority to acquire new territory. The purchase ultimately strengthened American power by providing land for future growth, resources for economic development, and strategic control over the Mississippi River and western territories.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item both" onclick="toggleDetails(this)">
+                    <div class="item-header">
+                        <span class="year">1812–1815</span>
+                        <div class="theme-tag both">Unity & Power</div>
+                        <span class="expand-indicator">▼</span>
+                    </div>
+                    <div class="event-title">War of 1812</div>
+                    <div class="event-summary">U.S. defends its independence from Britain again</div>
+                    <div class="detailed-content">
+                        <div class="image-placeholder">[Battle scene from War of 1812 or USS Constitution]</div>
+                        <div class="detail-section">
+                            <h4>Event Details</h4>
+                            <p>Often called the "Second War of Independence," this conflict arose from British interference with American shipping, impressment of American sailors, and British support for Native American resistance to American expansion. The war included battles on land and sea, the burning of Washington D.C., and ended with the Treaty of Ghent.</p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Connection to Themes: Unity and Power</h4>
+                            <p>The War of 1812 strengthened both American unity and power despite initial divisions over the conflict. Unity emerged from shared defense against foreign aggression, creating stronger national identity and pride, especially after victories like the Battle of New Orleans and "The Star-Spangled Banner" at Fort McHenry. The war unified Americans around common purpose and patriotic sentiment. Regarding power, the war established American military credibility and confirmed independence from European interference. The successful defense demonstrated America's ability to protect its sovereignty and territorial integrity, while post-war economic growth and westward expansion showed the nation's increasing power and confidence on the world stage.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="timeline-item unity" onclick="toggleDetails(this)">
+                    <div class="item-header">
+                        <span class="year">1820</span>
+                        <div class="theme-tag unity">Unity</div>
+                        <span class="expand-indicator">▼</span>
+                    </div>
+                    <div class="event-title">Missouri Compromise</div>
+                    <div class="event-summary">Balances power between free and slave states</div>
+                    <div class="detailed-content">
+                        <div class="image-placeholder">[Map showing Missouri Compromise line and free/slave states]</div>
+                        <div class="detail-section">
+                            <h4>Event Details</h4>
+                            <p>This legislative compromise, crafted by Henry Clay, admitted Missouri as a slave state and Maine as a free state, maintaining the balance in the Senate. It also established the 36°30' line, prohibiting slavery in Louisiana Purchase territories north of this boundary (except Missouri).</p>
+                        </div>
+                        <div class="detail-section">
+                            <h4>Connection to Theme: Unity</h4>
+                            <p>The Missouri Compromise temporarily preserved national unity by finding a peaceful solution to the explosive issue of slavery's expansion. Rather than allowing sectional tensions to fracture the Union, congressional leaders worked together to craft a compromise that satisfied both North and South. This agreement maintained the delicate balance of power in the Senate and established a precedent for handling territorial expansion through negotiation rather than conflict. The compromise demonstrated how unity could be maintained through political accommodation and mutual concession, even on deeply divisive moral issues, though it also revealed the growing tensions that would eventually threaten national cohesion.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Antebellum Period -->
+        <div class="period">
+            <h2 class="period-title">Antebellum Period (1820–1860)</h2>
+            <div class="timeline">
+                <div class="timeline-item power" onclick="toggleDetails(this)">
+                    <div class="item-header">
+                        <span class="year">1831</span>
+                        <div class="theme-tag power">Power</div>
+                        <span class="expand-indicator">▼</span>
+                    </div>
+                    <div class="event-title">Nat Turner's Rebellion</div>
+                    <div class="event-summary">Enslaved people resist oppression</div>
+                    <div class="detailed-content">
+                        <div
